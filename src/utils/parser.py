@@ -33,12 +33,12 @@ class SwiftCodeParser:
                 is_headquarter = swift_code.endswith('XXX')
 
                 swift_code_data = {
-                    "swiftCode": swift_code,
-                    "bankName": bank_name,
+                    "swift_code": swift_code,
+                    "bank_name": bank_name,
                     "address": address,
-                    "countryISO2": country_iso2,
-                    "countryName": country_name,
-                    "isHeadquarter": is_headquarter,
+                    "country_iso2": country_iso2,
+                    "country_name": country_name,
+                    "is_headquarter": is_headquarter,
                 }
 
                 swift_codes.append(swift_code_data)
