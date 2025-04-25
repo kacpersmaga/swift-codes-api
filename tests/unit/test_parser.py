@@ -16,49 +16,52 @@ UK,HSBBGB2345,XXX,HSBC BRANCH UK,"10 High Street",Manchester,UNITED KINGDOM,GMT
     assert len(swift_codes) == 4
 
     code1 = swift_codes[0]
-    assert code1["swiftCode"] == "BOAUSXXXXX"
-    assert code1["bankName"] == "BANK OF AMERICA"
-    assert code1["countryISO2"] == "US"
-    assert code1["countryName"] == "UNITED STATES"
-    assert code1["isHeadquarter"] is True
+    assert code1["swift_code"] == "BOAUSXXXXX"
+    assert code1["bank_name"] == "BANK OF AMERICA"
+    assert code1["address"] == "100 Main St, New York"
+    assert code1["country_iso2"] == "US"
+    assert code1["country_name"] == "UNITED STATES"
+    assert code1["is_headquarter"] is True
 
     code2 = swift_codes[1]
-    assert code2["swiftCode"] == "BOAUS1234"
-    assert code2["isHeadquarter"] is False
+    assert code2["swift_code"] == "BOAUS1234"
+    assert code2["bank_name"] == "BANK OF AMERICA BRANCH"
+    assert code2["is_headquarter"] is False
+
 
 def test_associate_branches_with_headquarters():
     swift_codes = [
         {
-            "swiftCode": "BOAUSXXXXX",
-            "bankName": "BANK OF AMERICA",
+            "swift_code": "BOAUSXXXXX",
+            "bank_name": "BANK OF AMERICA",
             "address": "100 Main St, New York",
-            "countryISO2": "US",
-            "countryName": "UNITED STATES",
-            "isHeadquarter": True
+            "country_iso2": "US",
+            "country_name": "UNITED STATES",
+            "is_headquarter": True
         },
         {
-            "swiftCode": "BOAUSXXX1",
-            "bankName": "BANK OF AMERICA BRANCH",
+            "swift_code": "BOAUSXXX1",
+            "bank_name": "BANK OF AMERICA BRANCH",
             "address": "200 Main St, Chicago",
-            "countryISO2": "US",
-            "countryName": "UNITED STATES",
-            "isHeadquarter": False
+            "country_iso2": "US",
+            "country_name": "UNITED STATES",
+            "is_headquarter": False
         },
         {
-            "swiftCode": "HSBBGBXXXX",
-            "bankName": "HSBC BANK UK",
+            "swift_code": "HSBBGBXXXX",
+            "bank_name": "HSBC BANK UK",
             "address": "1 Canada Square",
-            "countryISO2": "UK",
-            "countryName": "UNITED KINGDOM",
-            "isHeadquarter": True
+            "country_iso2": "UK",
+            "country_name": "UNITED KINGDOM",
+            "is_headquarter": True
         },
         {
-            "swiftCode": "HSBBGBXX45",
-            "bankName": "HSBC BRANCH UK",
+            "swift_code": "HSBBGBXX45",
+            "bank_name": "HSBC BRANCH UK",
             "address": "10 High Street",
-            "countryISO2": "UK",
-            "countryName": "UNITED KINGDOM",
-            "isHeadquarter": False
+            "country_iso2": "UK",
+            "country_name": "UNITED KINGDOM",
+            "is_headquarter": False
         }
     ]
 
@@ -69,6 +72,7 @@ def test_associate_branches_with_headquarters():
     assert "BOAUSXXX1" in hq_to_branches["BOAUSXXXXX"]
     assert "HSBBGBXX45" in hq_to_branches["HSBBGBXXXX"]
 
+
 def test_parse_csv_missing_columns(tmp_path):
     csv_data = "SWIFT CODE,NAME,ADDRESS\nBOAUSXXXXX,BANK OF AMERICA,100 Main St"
     csv_file = tmp_path / "missing_cols.csv"
@@ -77,20 +81,22 @@ def test_parse_csv_missing_columns(tmp_path):
     with pytest.raises(ValueError, match="Missing required columns"):
         SwiftCodeParser.parse_csv(str(csv_file))
 
+
 def test_branch_with_no_matching_headquarter():
     swift_codes = [
         {
-            "swiftCode": "XYZABC1234",
-            "bankName": "Lone Branch",
+            "swift_code": "XYZABC1234",
+            "bank_name": "Lone Branch",
             "address": "Unknown",
-            "countryISO2": "ZZ",
-            "countryName": "NOWHERE",
-            "isHeadquarter": False
+            "country_iso2": "ZZ",
+            "country_name": "NOWHERE",
+            "is_headquarter": False
         }
     ]
 
     result = SwiftCodeParser.associate_branches_with_headquarters(swift_codes)
     assert result == {}
+
 
 def test_parse_csv_with_extra_columns(tmp_path):
     csv_data = """COUNTRY ISO2 CODE,SWIFT CODE,CODE TYPE,NAME,ADDRESS,TOWN NAME,COUNTRY NAME,TIME ZONE,EXTRA COL
@@ -102,5 +108,10 @@ US,BOAUSXXXXX,XXX,BANK OF AMERICA,"100 Main St",New York,UNITED STATES,EST,SHOUL
     swift_codes = SwiftCodeParser.parse_csv(str(csv_file))
 
     assert len(swift_codes) == 1
-    assert swift_codes[0]["swiftCode"] == "BOAUSXXXXX"
-    assert swift_codes[0]["bankName"] == "BANK OF AMERICA"
+    code = swift_codes[0]
+    assert code["swift_code"] == "BOAUSXXXXX"
+    assert code["bank_name"] == "BANK OF AMERICA"
+    assert code["address"] == "100 Main St"
+    assert code["country_iso2"] == "US"
+    assert code["country_name"] == "UNITED STATES"
+    assert code["is_headquarter"] is True

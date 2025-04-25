@@ -58,8 +58,8 @@ class SwiftCodeParser:
         first_8_to_hq = {}
 
         for swift_code_data in swift_codes:
-            swift_code = swift_code_data["swiftCode"]
-            is_headquarter = swift_code_data["isHeadquarter"]
+            swift_code = swift_code_data["swift_code"]
+            is_headquarter = swift_code_data["is_headquarter"]
 
             if is_headquarter:
                 first_8 = swift_code[:8]
@@ -67,8 +67,8 @@ class SwiftCodeParser:
                 hq_to_branches[swift_code] = []
 
         for swift_code_data in swift_codes:
-            swift_code = swift_code_data["swiftCode"]
-            is_headquarter = swift_code_data["isHeadquarter"]
+            swift_code = swift_code_data["swift_code"]
+            is_headquarter = swift_code_data["is_headquarter"]
 
             if not is_headquarter:
                 first_8 = swift_code[:8]

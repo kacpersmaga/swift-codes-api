@@ -11,7 +11,7 @@ Base.metadata.create_all(bind=engine)
 
 
 @asynccontextmanager
-async def lifespan(app: FastAPI):
+async def lifespan(_: FastAPI):
     data_file = os.environ.get("SWIFT_DATA_FILE", "data/swift_codes.csv")
 
     if os.path.exists(data_file):

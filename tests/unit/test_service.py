@@ -224,20 +224,20 @@ def test_seed_database():
     try:
         expected_data = [
             {
-                "swiftCode": "ABCDUS33XXX",
-                "bankName": "Test Bank HQ",
+                "swift_code": "ABCDUS33XXX",
+                "bank_name": "Test Bank HQ",
                 "address": "123 Main St, New York",
-                "countryISO2": "US",
-                "countryName": "UNITED STATES",
-                "isHeadquarter": True
+                "country_iso2": "US",
+                "country_name": "UNITED STATES",
+                "is_headquarter": True
             },
             {
-                "swiftCode": "ABCDUS66",
-                "bankName": "Test Bank Branch",
+                "swift_code": "ABCDUS66",
+                "bank_name": "Test Bank Branch",
                 "address": "456 Side St, Chicago",
-                "countryISO2": "US",
-                "countryName": "UNITED STATES",
-                "isHeadquarter": False
+                "country_iso2": "US",
+                "country_name": "UNITED STATES",
+                "is_headquarter": False
             }
         ]
 
