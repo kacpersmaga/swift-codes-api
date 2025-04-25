@@ -1,10 +1,10 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.exc import OperationalError
 import os
 import time
 import logging
+
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy.exc import OperationalError
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -32,17 +32,16 @@ for attempt in range(MAX_RETRIES):
             pool_recycle=300,
             connect_args={"connect_timeout": 10}
         )
-
         with engine.connect() as connection:
-            connection.execute("SELECT 1")
+            connection.execute(text("SELECT 1"))
         logger.info("Successfully connected to the database")
         break
-    except OperationalError as e:
+    except OperationalError as db_error:
         if attempt < MAX_RETRIES - 1:
-            logger.warning(f"Database connection failed: {e}. Retrying in {RETRY_DELAY} seconds...")
+            logger.warning(f"Database connection failed: {db_error}. Retrying in {RETRY_DELAY} seconds...")
             time.sleep(RETRY_DELAY)
         else:
-            logger.error(f"Failed to connect to the database after {MAX_RETRIES} attempts: {e}")
+            logger.error(f"Failed to connect to the database after {MAX_RETRIES} attempts: {db_error}")
             raise
 
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
@@ -52,8 +51,5 @@ def get_db():
     db = SessionLocal()
     try:
         yield db
-    except OperationalError as e:
-        logger.error(f"Database operation failed: {e}")
-        raise
     finally:
         db.close()
